@@ -1,5 +1,5 @@
 # UiB INF273-Meta-Heuristikkar Pickup and Delivery Problem utils
-This Repo is dedicated to the function utils needed for the course project semester spring 2021.
+This Repo is dedicated to the function utils needed for the course project semester spring 2022.
 
 # Requirement
 - numpy
@@ -20,16 +20,16 @@ The function returns dictionary that includes the following information about ea
 - **'n_nodes'**: _number of nodes_
 - **'n_vehicles':** _number of vehicles_ 
 - **'n_calls':** _number of calls_ 
-- **'Cargo':** _information about each call_
-- **'TravelTime'**: _for each vehicle the travel time from one node to another_
-- **'FirstTravelTime'**: _for each vehicle the travel time from starting point to each node_ 
-- **'VesselCapacity'**: _the capacity of each vehicle_
-- **'LoadingTime'**: _for each vehicle the loading time of pickup of each call (-1 indicates not allowed)_ 
-- **'UnloadingTime'**: _for each vehicle the un-loading time of pickup of each call (-1 indicates not allowed)_ 
-- **'VesselCargo'**: _the list of allowed calls for each vehicle_
-- **'TravelCost'**: _for each vehicle the travel cost from one node to another_
-- **'FirstTravelCost'**:  _for each vehicle the travel cost from starting point to each node_
-- **'PortCost'**: _the cost of answering a call for each vehicle (-2 indicates not allowed)_
+- **'cargo':** _information about each call_
+- **'travel_time'**: _for each vehicle the travel time from one node to another_
+- **'first_travel_time'**: _for each vehicle the travel time from starting point to each node_ 
+- **'vessel_capacity'**: _the capacity of each vehicle_
+- **'loading_time'**: _for each vehicle the loading time of pickup of each call (-1 indicates not allowed)_ 
+- **'unloading_time'**: _for each vehicle the un-loading time of pickup of each call (-1 indicates not allowed)_ 
+- **'vessel_cargo'**: _the list of allowed calls for each vehicle_
+- **'travel_cost'**: _for each vehicle the travel cost from one node to another_
+- **'first_travel_cost'**:  _for each vehicle the travel cost from starting point to each node_
+- **'port_cost'**: _the cost of answering a call for each vehicle (-2 indicates not allowed)_
 ### 3) You can check the feasiblity of your asnwer like below:
 ```bash
 from pdp_utils import feasibility_check
