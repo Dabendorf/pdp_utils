@@ -90,60 +90,10 @@ def load_problem(filename: str):
 	# Call information 2D-List with [idx, origin_node, dest_node, size, cost_of_not_transporting, earliest_pickup_time, latest_pickup_time, earliest_delivery_time, latest_delivery_time]
 	call_info = np.array(temp_call_info, dtype=np.int)
 
-	exit(0)
-
-	"""# Cargo: List of Lists [origin_node, destination_node, size, cost_of_not_transporting,
-	# 						lower_pickup_bound, upper_pickup_bound, lower_delivery_bound, upper_delivery_bound]
-	# idx is the index of the matrix
-	cargo = np.array(temp_call_info, dtype=np.int)[:, 1:]
-
-	# Travel_times: [vehicle, origin_node, dest_node, travel_time, travel_cost]
-	temp_travel_times = np.array(temp_travel_times, dtype=np.int)
-	print(temp_travel_times)
-
-	exit(0)
-	
-
-	travel_time = np.zeros((num_vehicles + 1, num_nodes + 1, num_nodes + 1))
-	travel_cost = np.zeros((num_vehicles + 1, num_nodes + 1, num_nodes + 1))
-	for j in range(len(temp_travel_times)):
-		travel_time[temp_travel_times[j, 0]][temp_travel_times[j, 1], temp_travel_times[j, 2]] = temp_travel_times[j, 3]
-		travel_cost[temp_travel_times[j, 0]][temp_travel_times[j, 1], temp_travel_times[j, 2]] = temp_travel_times[j, 4]
-
-	vessel_capacity = np.zeros(num_vehicles)
-	starting_time = np.zeros(num_vehicles)
-	first_travel_time = np.zeros((num_vehicles, num_nodes))
-	first_travel_cost = np.zeros((num_vehicles, num_nodes))
-	temp_vehicle_info = np.array(temp_vehicle_info, dtype=np.int)
-	for i in range(num_vehicles):
-		vessel_capacity[i] = temp_vehicle_info[i, 3]
-		starting_time[i] = temp_vehicle_info[i, 2]
-		for j in range(num_nodes):
-			first_travel_time[i, j] = travel_time[i + 1, temp_vehicle_info[i, 1], j + 1] + temp_vehicle_info[i, 2]
-			first_travel_cost[i, j] = travel_cost[i + 1, temp_vehicle_info[i, 1], j + 1]
-	travel_time = travel_time[1:, 1:, 1:]
-	travel_cost = travel_cost[1:, 1:, 1:]
-	vessel_cargo = np.zeros((num_vehicles, num_calls + 1))
-	temp_vehicle_call_list = np.array(temp_vehicle_call_list, dtype=object)
-	for i in range(num_vehicles):
-		vessel_cargo[i, np.array(temp_vehicle_call_list[i][1:], dtype=np.int)] = 1
-	vessel_cargo = vessel_cargo[:, 1:]
-
-	loading_time = np.zeros((num_vehicles + 1, num_calls + 1))
-	unloading_time = np.zeros((num_vehicles + 1, num_calls + 1))
-	port_cost = np.zeros((num_vehicles + 1, num_calls + 1))
-	temp_node_costs = np.array(temp_node_costs, dtype=np.int)
-	for i in range(num_vehicles * num_calls):
-		loading_time[temp_node_costs[i, 0], temp_node_costs[i, 1]] = temp_node_costs[i, 2]
-		unloading_time[temp_node_costs[i, 0], temp_node_costs[i, 1]] = temp_node_costs[i, 4]
-		port_cost[temp_node_costs[i, 0], temp_node_costs[i, 1]] = temp_node_costs[i, 5] + temp_node_costs[i, 3]
-
-	loading_time = loading_time[1:, 1:]
-	unloading_time = unloading_time[1:, 1:]
-	port_cost = port_cost[1:, 1:]
-
-	# return output as a dictionary
-	"""
+	# Dictionary of lists of calls per vehicle dict[idx] = list(call_numbers)
+	vehicle_calls = dict()
+	for el in temp_vehicle_call_list:
+		vehicle_calls[int(el[0])] = list(map(int, el[1:]))
 
 	# num_nodes			int 	number of nodes
 	# num_vehicles 		int 	number of vehicles
@@ -152,8 +102,9 @@ def load_problem(filename: str):
 	# node_time_costs	dict[(vehicle, call)] = (orig_time, orig_cost, dest_time, dest_cost) Node times and costs 
 	# vehicle_info		2D-List with [idx, home_node, starting_time, capacity]	Vehicle information 
 	# call_info			2D-List with [idx, origin_node, dest_node, size, cost_of_not_transporting, earliest_pickup_time, latest_pickup_time, earliest_delivery_time, latest_delivery_time]	Call information
-	
+	# vehicle_calls		dict[idx] = list(call_numbers)	Dictionary of lists of calls per vehicle
 
+	# return output as a dictionary
 	output = {
 		"num_nodes": num_nodes,
 		"num_vehicles": num_vehicles,
@@ -162,14 +113,9 @@ def load_problem(filename: str):
 		"node_time_costs": node_time_costs,
 		"vehicle_info": vehicle_info,
 		"call_info": call_info,
+		"vehicle_calls": vehicle_calls,
 	}
 
-	"""output = {
-		'cargo': cargo,
-		'first_travel_time': first_travel_time,
-		'vessel_cargo': vessel_cargo,
-		'first_travel_cost': first_travel_cost,
-	}"""
 	return output
 
 
