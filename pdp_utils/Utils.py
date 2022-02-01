@@ -73,9 +73,36 @@ def load_problem(filename: str):
 		while not line.startswith("%"):
 			temp_node_costs.append(line.strip().split(","))
 			line = f.readline()
+		
+	# Travel times and costs (vehicle, origin_node, dest_node) = (travel_time, travel_cost)
+	travel_times_costs = dict()
+	for el in temp_travel_times:
+		travel_times_costs[(int(el[0]), int(el[1]), int(el[2]))] = (int(el[3]), int(el[4]))
 
-	cargo = np.array(temp_call_info, dtype=np.double)[:, 1:]
+	# Node times and costs (vehicle, call) = (orig_time, orig_cost, dest_time, dest_cost)
+	node_time_costs = dict()
+	for el in temp_node_costs:
+		node_time_costs[(int(el[0]), int(el[1]))] = (int(el[2]), int(el[3]), int(el[4]), int(el[5]))
+	
+	# Vehicle information 2D-List with [idx, home_node, starting_time, capacity]
+	vehicle_info = np.array(temp_vehicle_info, dtype=np.int)
+
+	# Call information 2D-List with [idx, origin_node, dest_node, size, cost_of_not_transporting, earliest_pickup_time, latest_pickup_time, earliest_delivery_time, latest_delivery_time]
+	call_info = np.array(temp_call_info, dtype=np.int)
+
+	exit(0)
+
+	"""# Cargo: List of Lists [origin_node, destination_node, size, cost_of_not_transporting,
+	# 						lower_pickup_bound, upper_pickup_bound, lower_delivery_bound, upper_delivery_bound]
+	# idx is the index of the matrix
+	cargo = np.array(temp_call_info, dtype=np.int)[:, 1:]
+
+	# Travel_times: [vehicle, origin_node, dest_node, travel_time, travel_cost]
 	temp_travel_times = np.array(temp_travel_times, dtype=np.int)
+	print(temp_travel_times)
+
+	exit(0)
+	
 
 	travel_time = np.zeros((num_vehicles + 1, num_nodes + 1, num_nodes + 1))
 	travel_cost = np.zeros((num_vehicles + 1, num_nodes + 1, num_nodes + 1))
@@ -114,21 +141,35 @@ def load_problem(filename: str):
 	loading_time = loading_time[1:, 1:]
 	unloading_time = unloading_time[1:, 1:]
 	port_cost = port_cost[1:, 1:]
+
+	# return output as a dictionary
+	"""
+
+	# num_nodes			int 	number of nodes
+	# num_vehicles 		int 	number of vehicles
+	# num_calls			int		number of calls
+	# travel_time_costs dict[(vehicle, origin_node, dest_node)] = (travel_time, travel_cost)	travel time and cost for each tuple (vehicle, start_node, dest_node)
+	# node_time_costs	dict[(vehicle, call)] = (orig_time, orig_cost, dest_time, dest_cost) Node times and costs 
+	# vehicle_info		2D-List with [idx, home_node, starting_time, capacity]	Vehicle information 
+	# call_info			2D-List with [idx, origin_node, dest_node, size, cost_of_not_transporting, earliest_pickup_time, latest_pickup_time, earliest_delivery_time, latest_delivery_time]	Call information
+	
+
 	output = {
-		'n_nodes': num_nodes,
-		'n_vehicles': num_vehicles,
-		'n_calls': num_calls,
-		'cargo': cargo,
-		'travel_time': travel_time,
-		'first_travel_time': first_travel_time,
-		'vessel_capacity': vessel_capacity,
-		'loading_time': loading_time,
-		'unloading_time': unloading_time,
-		'vessel_cargo': vessel_cargo,
-		'travel_cost': travel_cost,
-		'first_travel_cost': first_travel_cost,
-		'port_cost': port_cost
+		"num_nodes": num_nodes,
+		"num_vehicles": num_vehicles,
+		"num_calls": num_calls,
+		"travel_time_cost": travel_times_costs,
+		"node_time_costs": node_time_costs,
+		"vehicle_info": vehicle_info,
+		"call_info": call_info,
 	}
+
+	"""output = {
+		'cargo': cargo,
+		'first_travel_time': first_travel_time,
+		'vessel_cargo': vessel_cargo,
+		'first_travel_cost': first_travel_cost,
+	}"""
 	return output
 
 
@@ -168,9 +209,9 @@ def feasibility_check(solution, problem):
 			else:
 				load_size = 0
 				current_time = 0
-				sortRout = np.sort(currentVPlan, kind='mergesort')
-				I = np.argsort(currentVPlan, kind='mergesort')
-				indx = np.argsort(I, kind='mergesort')
+				sortRout = np.sort(currentVPlan)
+				I = np.argsort(currentVPlan)
+				indx = np.argsort(I)
 				load_size -= cargo[sortRout, 2]
 				load_size[::2] = cargo[sortRout[::2], 2]
 				load_size = load_size[indx]
@@ -244,9 +285,9 @@ def cost_function(solution, problem):
 			not_transport_cost = np.sum(cargo[currentVPlan, 3]) / 2
 		else:
 			if no_double_call_on_vehicle > 0:
-				sortRout = np.sort(currentVPlan, kind='mergesort')
-				I = np.argsort(currentVPlan, kind='mergesort')
-				indx = np.argsort(I, kind='mergesort')
+				sortRout = np.sort(currentVPlan)
+				I = np.argsort(currentVPlan)
+				indx = np.argsort(I)
 
 				port_index = cargo[sortRout, 1].astype(int)
 				port_index[::2] = cargo[sortRout[::2], 0]
